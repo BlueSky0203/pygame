@@ -12,24 +12,24 @@ GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 YELLOW = (255, 255, 0)
 
-# 遊戲初始化 and 創建視窗
+# game initialization and create screen
 pygame.init()
 pygame.mixer.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("The first game")
 clock = pygame.time.Clock()
 
-# 載入圖片~ pygame要初始化, 如果沒初始化pygame會產生錯誤
+# input picture~ pygame need initialization, if not initialization pygame would generate error
 # (os.path) represent python file location
-background_img = pygame.image.load(os.path.join("img", "background.png")).convert()
-player_img = pygame.image.load(os.path.join("img", "player.png")).convert()
+background_img = pygame.image.load(os.path.join("aerospace" ,"img", "background.png")).convert()
+player_img = pygame.image.load(os.path.join("aerospace" ,"img", "player.png")).convert()
 player_mini_img = pygame.transform.scale(player_img, (25, 19))
 player_mini_img.set_colorkey(BLACK)
 pygame.display.set_icon(player_mini_img)
-bullet_img = pygame.image.load(os.path.join("img", "bullet.png")).convert()
+bullet_img = pygame.image.load(os.path.join("aerospace" ,"img", "bullet.png")).convert()
 rock_imgs = []
 for i in range(7):
-    rock_imgs.append(pygame.image.load(os.path.join("img", f"rock{i}.png")).convert())
+    rock_imgs.append(pygame.image.load(os.path.join("aerospace" ,"img", f"rock{i}.png")).convert())
 
 # explosion
 expl_anim = {}
@@ -37,29 +37,29 @@ expl_anim['large'] = []
 expl_anim['small'] =[]
 expl_anim['player'] = []
 for i in range(9):
-    expl_img = pygame.image.load(os.path.join("img", f"expl{i}.png")).convert()
+    expl_img = pygame.image.load(os.path.join("aerospace" ,"img", f"expl{i}.png")).convert()
     expl_img.set_colorkey(BLACK)
     expl_anim['large'].append(pygame.transform.scale(expl_img, (75, 75)))
     expl_anim['small'].append(pygame.transform.scale(expl_img, (30, 30)))
     # player explosion
-    player_expl_img = pygame.image.load(os.path.join("img", f"player_expl{i}.png")).convert()
+    player_expl_img = pygame.image.load(os.path.join("aerospace" ,"img", f"player_expl{i}.png")).convert()
     player_expl_img.set_colorkey(BLACK)
     expl_anim['player'].append(player_expl_img)
 
 power_imgs = {}
-power_imgs['shield'] = pygame.image.load(os.path.join("img", "shield.png")).convert()
-power_imgs['gun'] = pygame.image.load(os.path.join("img", "gun.png")).convert()
+power_imgs['shield'] = pygame.image.load(os.path.join("aerospace" ,"img", "shield.png")).convert()
+power_imgs['gun'] = pygame.image.load(os.path.join("aerospace" ,"img", "gun.png")).convert()
 
-# 載入音樂 音效
-shoot_sound = pygame.mixer.Sound(os.path.join("sound", "shoot.wav"))
-gun_sound = pygame.mixer.Sound(os.path.join("sound", "pow0.wav"))
-shield_sound = pygame.mixer.Sound(os.path.join("sound", "pow1.wav"))
-die_sound = pygame.mixer.Sound(os.path.join("sound", "rumble.ogg"))
+# input music and audio effect
+shoot_sound = pygame.mixer.Sound(os.path.join("aerospace" ,"sound", "shoot.wav"))
+gun_sound = pygame.mixer.Sound(os.path.join("aerospace" ,"sound", "pow0.wav"))
+shield_sound = pygame.mixer.Sound(os.path.join("aerospace" ,"sound", "pow1.wav"))
+die_sound = pygame.mixer.Sound(os.path.join("aerospace" ,"sound", "rumble.ogg"))
 expl_sounds = [
-    pygame.mixer.Sound(os.path.join("sound", "expl0.wav")),
-    pygame.mixer.Sound(os.path.join("sound", "expl1.wav"))
+    pygame.mixer.Sound(os.path.join("aerospace" ,"sound", "expl0.wav")),
+    pygame.mixer.Sound(os.path.join("aerospace" ,"sound", "expl1.wav"))
 ]
-pygame.mixer.music.load(os.path.join("sound", "BGM.mp3"))
+pygame.mixer.music.load(os.path.join("aerospace" ,"sound", "Powerful_BGM.mp3"))
 pygame.mixer.music.set_volume(1)
 
 font_name = pygame.font.match_font('arial')
@@ -149,7 +149,7 @@ class Player(pygame.sprite.Sprite):
             self.rect.bottom = HEIGHT - 10
 
 
-        # 布林值 檢查每一個按鍵有沒有按到
+        # Boolean to check the every key is press or not
         key_pressed = pygame.key.get_pressed()
         if key_pressed[pygame.K_RIGHT]:
             self.rect.x += self.speedx
@@ -169,7 +169,7 @@ class Player(pygame.sprite.Sprite):
                 all_sprites.add(bullet)
                 bullets.add(bullet)
                 shoot_sound.play()
-            elif self.gun >= 2:
+            elif self.gun == 2:
                 bullet1 = Bullet(self.rect.left, self.rect.centery)
                 bullet2 = Bullet(self.rect.right, self.rect.centery)
                 all_sprites.add(bullet1)
@@ -177,6 +177,18 @@ class Player(pygame.sprite.Sprite):
                 bullets.add(bullet1)
                 bullets.add(bullet2)
                 shoot_sound.play()
+            elif self.gun >= 3:
+                bullet1 = Bullet(self.rect.left, self.rect.centery)
+                bullet2 = Bullet(self.rect.right, self.rect.centery)
+                bullet3 = Bullet(self.rect.centerx, self.rect.centery)
+                all_sprites.add(bullet1)
+                all_sprites.add(bullet2)
+                all_sprites.add(bullet3)
+                bullets.add(bullet1)
+                bullets.add(bullet2)
+                bullets.add(bullet3)
+                shoot_sound.play()
+
 
     def hide(self):
         self.hidden = True
@@ -286,9 +298,9 @@ class Power(pygame.sprite.Sprite):
 # BGM repeat
 pygame.mixer.music.play(-1)
 
-# 遊戲初始畫面
+# game initial picture
 show_init = True
-# 遊戲迴圈
+# game loop
 running = True
 while running:
     if show_init:
@@ -308,7 +320,7 @@ while running:
         score = 0
 
     clock.tick(FPS)
-    # 取得輸入
+    # get input
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -364,7 +376,7 @@ while running:
     if player.lives == 0 and not(death_expl.alive()):
         show_init = True
 
-    # 畫面顯示
+    # picture display
     screen.fill(BLACK)
     screen.blit(background_img, (0, 0))
     all_sprites.draw(screen)
